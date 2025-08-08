@@ -16,11 +16,13 @@ Why this matters:
 import os
 from dotenv import load_dotenv
 
+BASE_DIR = os.getcwd()
+
 # Load environment variables from .env file
-load_dotenv(dotenv_path="python/src/auth/env")
+load_dotenv(dotenv_path=os.path.join(BASE_DIR, ".env"))
 
 # Read the template SQL file
-with open("python/src/auth/init.sql", "r") as f:
+with open(os.path.join(BASE_DIR, "init.sql"), "r") as f:
     sql_template = f.read()
 
 # Replace placeholders with actual env values
@@ -31,7 +33,7 @@ for key in ["MYSQL_USER", "MYSQL_HOST", "MYSQL_PASSWORD", "MYSQL_DB"]:
     sql_template = sql_template.replace(f"${{{key}}}", value)
 
 # Write the final SQL file
-with open("python/src/auth/init-final.sql", "w") as f:
+with open(os.path.join(BASE_DIR, "init-final.sql"), "w") as f:
     f.write(sql_template)
 
 print("init-final.sql generated successfully with environment values.")

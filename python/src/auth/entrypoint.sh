@@ -26,7 +26,8 @@ SQL_FILE="init-final.sql"
 # This avoids regenerating it every time the container starts
 if [ ! -f "$SQL_FILE" ]; then
     echo "Generating $SQL_FILE using generate_init_sql.py..."
-    python generate_init_sql.py
+    python /app/generate_init_sql.py
+    echo "$SQL_FILE generated successfully."
 else
     echo "$SQL_FILE already exists. Skipping generation."
 fi
