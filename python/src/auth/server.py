@@ -17,7 +17,7 @@ server.config["MYSQL_PASSWORD"] = os.getenv("MYSQL_PASSWORD")
 server.config["MYSQL_DB"] = os.getenv("MYSQL_DB")
 server.config["MYSQL_PORT"] = int(os.getenv("MYSQL_PORT"))
 
-# Initialize MySQL. this must done after setting the config
+# Initialize MySQL. this must done after setting the config as it reads from it
 mysql = MySQL(server)
 
 
