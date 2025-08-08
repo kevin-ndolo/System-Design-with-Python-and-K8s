@@ -1,0 +1,17 @@
+-- file: python/src/auth/init.sql
+
+CREATE USER '${MYSQL_USER}'@'${MYSQL_HOST}' IDENTIFIED BY '${MYSQL_PASSWORD}';
+
+CREATE DATABASE ${MYSQL_DB};
+
+GRANT ALL PRIVILEGES ON ${MYSQL_DB}.* TO '${MYSQL_USER}'@'${MYSQL_HOST}';
+
+USE ${MYSQL_DB};
+
+CREATE TABLE user (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL
+);
+
+INSERT INTO user (email, password) VALUES ('georgio@email.com', 'Admin123');
