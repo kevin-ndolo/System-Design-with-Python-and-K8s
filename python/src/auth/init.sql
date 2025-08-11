@@ -1,9 +1,11 @@
 -- file: python/src/auth/init.sql
 
+-- Drop user if it exists
 DROP USER IF EXISTS '${MYSQL_USER}'@'${MYSQL_HOST}';
 
 CREATE USER '${MYSQL_USER}'@'${MYSQL_HOST}' IDENTIFIED BY '${MYSQL_PASSWORD}';
 
+-- Drop database if it exists
 DROP DATABASE IF EXISTS ${MYSQL_DB};
 
 
