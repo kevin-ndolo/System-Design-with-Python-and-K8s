@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
 
 # Set working directory
 WORKDIR /app
-
+ 
 # Install dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip \
@@ -28,5 +28,5 @@ EXPOSE 5000
 
 CMD ["python3", "server.py"]
 
-# Entrypoint script handles SQL generation + app startup
+# Entrypoint script handles SQL generation
 ENTRYPOINT ["bash", "entrypoint.sh"]
