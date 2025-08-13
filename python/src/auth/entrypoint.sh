@@ -43,7 +43,8 @@ else
     echo "Skipping MySQL setup. MYSQL_ROOT_PASSWORD or MYSQL_HOST not set."
 fi
 
-# Start the Flask application
-# 'exec' replaces the shell with the Python process, allowing proper signal handling
-echo "Starting Flask app..."
-exec python server.py
+
+# Execute the command passed from the Dockerfile's CMD instruction.
+# This makes the entrypoint script flexible—allowing the container to run
+# different commands (e.g., python3 server.py, migrations, tests) without modifying this file.
+exec "$@"
