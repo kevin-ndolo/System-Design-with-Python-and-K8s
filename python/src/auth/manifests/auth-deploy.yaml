@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth  # Unique name for the Deployment
+  labels:
+    app: auth  # Label used for selection and grouping
+spec:
+  replicas: 2  # Number of pod replicas to maintain
+  selector:
+    matchLabels:
+      app: auth  # Match pods with this label
+  strategy:
+    type: RollingUpdate  # Update pods incrementally
+    rollingUpdate:
+      maxSurge: 3  # Allow up to 3 extra pods during update (burst capacity)
+  template:
+    metadata:
+      labels:
+        app: auth  # Label applied to pod template (must match selector)
+    spec:
+      containers:
+        - name: auth  # Container name (used in logs and metrics)
+          image: kevindev1/auth:latest  # Locally built Docker image
+          ports:
+            - containerPort: 5000  # Port exposed by the container (matches Flask default)
+          envFrom:
+            - configMapRef:
+                name: auth-configmap  # Inject environment variables from ConfigMap
+            - secretRef:
+                name: auth-secret  # Inject sensitive env vars from Secret

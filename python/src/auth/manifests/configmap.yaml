@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: auth-configmap  # Unique name for referencing in Deployment
+data:
+  MYSQL_HOST: host.minikube.internal  # Use Minikube's internal DNS to reach host machine where MySQL 
+                                      # runs  locally;
+                                      # We use 'host.minikube.internal' instead of 'localhost' because
+                                      # 'localhost' would point to the pod itself, not the host
+
+  MYSQL_USER: auth_user               # MySQL username for the auth service
+  MYSQL_DB: auth                      # Target database name
+  MYSQL_PORT: "3306"                  # MySQL port (quoted to ensure string format)

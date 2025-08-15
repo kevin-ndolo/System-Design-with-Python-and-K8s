@@ -1,3 +1,10 @@
+
+python/src/auth/env
+python/src/auth/init-final.sql
+python/src/auth/manifests/secret.yaml
+
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
