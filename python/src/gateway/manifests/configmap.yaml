@@ -1,0 +1,10 @@
+# ConfigMap for the Gateway service
+# Stores non-sensitive environment variables used by the gateway container
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gateway-configmap             # Unique name for referencing in Deployment
+data:
+  AUTH_SVC_ADDRESS: "auth:5000"       # Internal DNS name and port of the auth service
+                                      # Used by gateway to route authentication requests

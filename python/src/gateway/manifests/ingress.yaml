@@ -1,0 +1,35 @@
+# Ingress resource for exposing the Gateway service externally
+# Handles HTTP routing from the internet to internal services via hostname and path rules
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gateway-ingress                     # Unique name for the Ingress object
+  annotations:
+    # Allow unlimited request body size (e.g., for large file uploads)
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+
+    # Extend read timeout to 600 seconds (10 minutes)
+    # Useful for long-running requests like media conversion
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+
+    # Extend send timeout to 600 seconds
+    # Ensures client can receive large responses without premature termination
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+
+    # Optional: Uncomment to set max temp file size for buffering uploads
+    # nginx.ingress.kubernetes.io/proxy-max-temp-file-size: "1024m"
+
+spec:
+  rules:
+    - host: mp3converter.com                # Domain name that routes to this Ingress
+                                            # Must be configured in DNS to point to cluster IP or LoadBalancer
+      http:
+        paths:
+          - path: /                         # Match all paths under root (e.g., /convert, /status)
+            pathType: Prefix                # Prefix match allows routing subpaths under "/"
+            backend:
+              service:
+                name: gateway               # Internal Kubernetes Service name to route traffic to
+                port:
+                  number: 8080              # Port exposed by the gateway Service (must match service.yaml)

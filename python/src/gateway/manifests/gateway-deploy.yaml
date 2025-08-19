@@ -1,0 +1,29 @@
+# Gateway Deployment manifest for Kubernetes
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway                     # Unique name for the Deployment
+  labels:
+    app: gateway                   # Label used for selector matching and grouping
+spec:
+  replicas: 2                      # Number of pod replicas for high availability
+  selector:
+    matchLabels:
+      app: gateway                 # Ensures pods with this label are managed by this Deployment
+  strategy:
+    type: RollingUpdate            # Enables zero-downtime updates
+    rollingUpdate:
+      maxSurge: 3                  # Allows up to 3 extra pods during rollout (burst capacity)
+  template:
+    metadata:
+      labels:
+        app: gateway               # Labels applied to pod template for matching and service discovery
+    spec:
+      containers:
+        - name: gateway            # Container name inside the pod
+          image: kevindev1/gateway:latest  # Docker image pulled from Docker Hub
+          envFrom:
+            - configMapRef:
+                name: gateway-configmap  # Injects non-sensitive config (e.g., URLs, flags)
+            - secretRef:
+                name: gateway-secret     # Injects sensitive data (e.g., API keys, DB creds)

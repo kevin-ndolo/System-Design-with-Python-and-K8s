@@ -1,0 +1,17 @@
+# Kubernetes Service for the Gateway component
+# Exposes the gateway pods internally within the cluster
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway                    # Unique name for the Service object
+spec:
+  selector:
+    app: gateway                   # Targets pods with label 'app: gateway'
+                                   # Must match labels in gateway Deployment
+  type: ClusterIP                  # Default service type; exposes internally within the cluster
+                                   # Use NodePort or LoadBalancer for external access
+  ports:
+    - port: 8080                   # Port exposed by the Service (used by other services)
+      targetPort: 8080            # Port on the container that receives traffic
+      protocol: TCP               # Protocol used for communication
