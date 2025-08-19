@@ -39,6 +39,7 @@ def login():
         return err
 
 
+
 @server.route("/upload", methods=["POST"])
 def upload():
     access, err = validate.token(request)
@@ -64,7 +65,9 @@ def upload():
 
 
 
-
+@server.route("/download", methods=["GET"])
+def download():
+    pass
 
 
 
