@@ -40,3 +40,12 @@ spec:
         - name: rabbitmq-volume
           persistentVolumeClaim:
             claimName: rabbitmq-pvc  # References a pre-created PVC; ensures data survives pod restarts
+
+
+
+# RabbitMQ exposes two key ports:
+# - TCP 5672: used by producers/consumers for AMQP messaging (core transport layer)
+# - HTTP 15672: used for management UI (monitoring queues, users, connections, etc.)
+# Both are required—TCP enables message flow, HTTP enables visibility and admin control.
+# Accessing the StatefulSet doesn't guarantee service-level connectivity to these ports,
+# so we expose both to ensure full functionality across app and ops layers.
