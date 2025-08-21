@@ -15,3 +15,8 @@ spec:
                 name: rabbitmq  # Targets the rabbitmq Service (port 15672 for management UI)
                 port:
                   number: 15672
+
+
+# Routes external HTTP traffic to RabbitMQ's management UI via Service on port 15672.
+# Enables browser-based access to queues, exchanges, and monitoring tools.
+# Does not expose AMQP (5672)—that remains internal or exposed via NodePort/LoadBalancer if needed.

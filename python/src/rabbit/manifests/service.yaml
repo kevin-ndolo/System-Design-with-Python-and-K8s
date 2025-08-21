@@ -10,7 +10,11 @@ spec:
   ports:
     - name: http  # RabbitMQ management UI (default port: 15672)
       protocol: TCP #RabbitMQ needs TCP for the actually sending and receiving of messages
-      port: 15672
+
+      port: 15672  # This Service exposes RabbitMQ's HTTP management UI (port 15672) internally.
+                   # The Ingress resource references this Service to route external HTTP traffic to the UI.
+                   # Without this Service, the Ingress controller cannot forward requests to the correct pod.
+                   
       targetPort: 15672
     - name: amqp  # AMQP : RabbitMQ messaging protocol (default port: 5672)
       protocol: TCP
