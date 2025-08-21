@@ -1,4 +1,4 @@
-//file: System-Design-with-Python-and-K8s/python/src/rabbit/manifests/service.yaml
+
 apiVersion: v1
 kind: Service
 metadata:
