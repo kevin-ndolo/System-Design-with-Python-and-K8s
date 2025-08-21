@@ -1,0 +1,42 @@
+
+
+# This manifest defines a RabbitMQ StatefulSet, which ensures stable pod identities and persistent storage.
+# Ideal for message brokers that require durable queues and consistent hostnames across restarts.
+
+apiVersion: apps/v1
+kind: StatefulSet  # StatefulSet is chosen over Deployment to guarantee stable pod names and volume persistence
+metadata:
+  name: rabbitmq  # Name for the StatefulSet; used in pod DNS and volume naming
+spec:
+  serviceName: "not-applicable"  # Placeholder; should be replaced with a headless Service name for stable pod DNS
+  selector:
+    matchLabels:
+      app: rabbitmq  # Label selector used to match pods managed by this StatefulSet
+  template:
+    metadata:
+      labels:
+        app: rabbitmq  # Pod template label; must match selector above
+    spec:
+      containers:
+        - name: rabbitmq
+          image: rabbitmq:3-management  # Official RabbitMQ image with built-in management UI (port 15672)
+          ports:
+            - name: http
+              protocol: TCP
+              containerPort: 15672  # Exposes RabbitMQ management dashboard
+            - name: amqp # Advanced Message Queuing Protocol
+                        # It’s the standard protocol RabbitMQ uses for message exchange—port 5672 is the default for AMQP traffic
+              protocol: TCP
+              containerPort: 5672  # Main AMQP port for message publishing and consumption
+          envFrom:
+            - configMapRef:
+                name: rabbitmq-configmap  # Loads non-sensitive config values (e.g., default user, vhost)
+            - secretRef:
+                name: rabbitmq-secret  # Loads sensitive credentials (e.g., password, TLS certs)
+          volumeMounts:
+            - mountPath: "/var/lib/rabbitmq"
+              name: rabbitmq-volume  # Mounts persistent volume for message durability and queue retention
+      volumes:
+        - name: rabbitmq-volume
+          persistentVolumeClaim:
+            claimName: rabbitmq-pvc  # References a pre-created PVC; ensures data survives pod restarts

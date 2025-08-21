@@ -1,0 +1,7 @@
+//file: System-Design-with-Python-and-K8s/python/src/rabbit/manifests/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rabbitmq-configmap  # Stores non-sensitive RabbitMQ config values (e.g. env vars, flags)
+data:
+  PLACEHOLDER: "NONE"  # Placeholder key—replace with actual config like RABBITMQ_DEFAULT_VHOST or clustering options

@@ -1,0 +1,18 @@
+//file: System-Design-with-Python-and-K8s/python/src/rabbit/manifests/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq
+spec:
+  type: ClusterIP  # Internal-only service, not exposed outside the cluster
+  selector:
+    app: rabbitmq  # Matches pods with label app=rabbitmq
+  ports:
+    - name: http  # RabbitMQ management UI (default port: 15672)
+      protocol: TCP
+      port: 15672
+      targetPort: 15672
+    - name: amqp  # AMQP : RabbitMQ messaging protocol (default port: 5672)
+      protocol: TCP
+      port: 5672
+      targetPort: 5672

@@ -70,7 +70,7 @@ def createJWT(username, secret, authz):
                     "username":username,
                     "exp": datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(days=1),
                     "iat":datetime.datetime.utcnow(),
-                    "admin": authz
+                    "admin": authz,
 
                 },
                 secret,

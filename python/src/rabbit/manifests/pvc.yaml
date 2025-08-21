@@ -1,0 +1,12 @@
+//file: System-Design-with-Python-and-K8s/python/src/rabbit/manifests/pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rabbitmq-pvc  # PVC for RabbitMQ data persistence (e.g. message queues, metadata)
+spec:
+  accessModes:
+    - ReadWriteOnce  # Mounted as read-write by a single node (typical for stateful apps)
+  resources:
+    requests:
+      storage: 1Gi  # Requests 1Gi of persistent storage
+  storageClassName: standard  # Uses default storage class provisioned by the cluster

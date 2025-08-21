@@ -1,0 +1,17 @@
+//file: System-Design-with-Python-and-K8s/python/src/rabbit/manifests/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: rabbitmq-ingress  # Exposes RabbitMQ management UI via HTTP routing
+spec:
+  rules:
+    - host: rabbitmq-manager.com  # Domain to access the RabbitMQ UI (requires /etc/hosts update or DNS setup)
+      http:
+        paths:
+          - path: /  # Routes all traffic from root path
+            pathType: Prefix  # Matches any path prefixed with "/"
+            backend:
+              service:
+                name: rabbitmq  # Targets the rabbitmq Service (port 15672 for management UI)
+                port:
+                  number: 15672
