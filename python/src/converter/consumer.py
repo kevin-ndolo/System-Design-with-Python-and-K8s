@@ -68,15 +68,25 @@ def main():
     channel.start_consuming()
 
 # Entry point for the script.
-# Wraps `main()` in a try-except block to handle graceful shutdown via keyboard interrupt.
+# This block ensures the consumer starts properly and logs any fatal errors during startup.
 if __name__ == "__main__":
     try:
+        # Attempt to start the main consumer loop
         main()
-    except KeyboardInterrupt:
-        print("Interrupted")
+    except Exception as e:
+        # Catch any unexpected errors (not just KeyboardInterrupt)
+        import traceback
+
+        # Log a clear error message to the console
+        print("❌ Converter startup failed:", e)
+
+        # Print the full stack trace for debugging
+        traceback.print_exc()
+
         try:
-            # Attempt a clean exit.
-            sys.exit(0)
+            # Exit with a non-zero status code to signal failure to Kubernetes
+            sys.exit(1)
         except SystemExit:
-            # Fallback for environments where `sys.exit()` might be suppressed.
-            os._exit(0)
+            # Fallback exit method in case sys.exit() is suppressed
+            os._exit(1)
+

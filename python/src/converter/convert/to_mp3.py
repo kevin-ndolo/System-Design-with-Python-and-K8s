@@ -6,7 +6,8 @@ import pika
 from bson.objectid import ObjectId
 
 #Explicit import required for MoviePy v2.2.1+
-from moviepy.editor import VideoFileClip
+#from moviepy.editor import VideoFileClip
+from moviepy import VideoFileClip
 
 
 

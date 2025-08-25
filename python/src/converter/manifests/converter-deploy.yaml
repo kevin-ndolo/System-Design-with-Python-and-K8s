@@ -1,0 +1,29 @@
+# Kubernetes Deployment for the converter application
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: converter  # Name of the deployment
+  labels:
+    app: converter  # Label to identify this deployment
+spec:
+  replicas: 4  # Number of pod instances to run
+  selector:
+    matchLabels:
+      app: converter  # Selector to match pods managed by this deployment
+  strategy:
+    type: RollingUpdate  # Update strategy - gradually replace old pods with new ones
+    rollingUpdate:
+      maxSurge: 8  # Maximum number of additional pods created during update
+  template:
+    metadata:
+      labels:
+        app: converter  # Labels applied to each pod created by this deployment
+    spec:
+      containers:
+      - name: converter  # Container name within the pod
+        image: kevindev1/converter:latest  # Docker image to run
+        envFrom:
+        - configMapRef:
+            name: converter-configmap  # Load environment variables from ConfigMap
+        - secretRef:
+            name: converter-secret  # Load environment variables from Secret

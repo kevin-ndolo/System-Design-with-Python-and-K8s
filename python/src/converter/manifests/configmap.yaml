@@ -1,0 +1,9 @@
+# Kubernetes ConfigMap for storing non-sensitive configuration data for the converter app
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: converter-configmap  # Name of the ConfigMap - referenced in deployment's configMapRef
+data:
+  # Key-value pairs for environment variables that will be injected into the converter pods
+  MP3_QUEUE: "mp3"      # Name of the message queue for MP3 conversion tasks
+  VIDEO_QUEUE: "video"  # Name of the message queue for video conversion tasks
