@@ -1,4 +1,4 @@
-# file: python/src/auth/Dockerfile
+
 
 FROM python:3.12-slim-bullseye
 
@@ -29,5 +29,4 @@ EXPOSE 5000
 
 CMD ["python3", "server.py"]
 
-# Entrypoint script handles SQL generation
-ENTRYPOINT ["bash", "entrypoint.sh"]
+

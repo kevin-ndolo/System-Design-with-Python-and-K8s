@@ -1,19 +1,17 @@
--- file: python/src/auth/init.sql
-
--- Drop user if it exists
-DROP USER IF EXISTS '${MYSQL_USER}'@'${MYSQL_HOST}';
-
-CREATE USER '${MYSQL_USER}'@'${MYSQL_HOST}' IDENTIFIED BY '${MYSQL_PASSWORD}';
-
--- Drop database if it exists
-DROP DATABASE IF EXISTS ${MYSQL_DB};
 
 
-CREATE DATABASE ${MYSQL_DB};
+DROP USER IF EXISTS 'auth_user'@'localhost';
 
-GRANT ALL PRIVILEGES ON ${MYSQL_DB}.* TO '${MYSQL_USER}'@'${MYSQL_HOST}';
+CREATE USER 'auth_user'@'localhost' IDENTIFIED BY 'Auth123';
 
-USE ${MYSQL_DB};
+DROP DATABASE IF EXISTS auth;
+
+
+CREATE DATABASE auth;
+
+GRANT ALL PRIVILEGES ON auth.* TO 'auth_user'@'localhost';
+
+USE auth;
 
 CREATE TABLE user (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,

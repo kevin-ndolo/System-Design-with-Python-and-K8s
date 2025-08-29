@@ -1,21 +1,19 @@
-from dotenv import load_dotenv
 import jwt, datetime, os
 from flask import Flask, request
 from flask_mysqldb import MySQL
 
 
-# Load environment variables from .env file
-load_dotenv()
 
 # Initialize Flask app 
 server = Flask(__name__)
 
 # configure MySQL connection parameters
-server.config["MYSQL_HOST"] = os.getenv("MYSQL_HOST")
-server.config["MYSQL_USER"] = os.getenv("MYSQL_USER")
-server.config["MYSQL_PASSWORD"] = os.getenv("MYSQL_PASSWORD")
-server.config["MYSQL_DB"] = os.getenv("MYSQL_DB")
-server.config["MYSQL_PORT"] = int(os.getenv("MYSQL_PORT"))
+server.config["MYSQL_HOST"] = os.environ.get("MYSQL_HOST")
+server.config["MYSQL_USER"] = os.environ.get("MYSQL_USER")
+server.config["MYSQL_PASSWORD"] = os.environ.get("MYSQL_PASSWORD")
+server.config["MYSQL_DB"] = os.environ.get("MYSQL_DB")
+server.config["MYSQL_PORT"] = int(os.environ.get("MYSQL_PORT"))
+
 
 # Initialize MySQL. this must done after setting the config as it reads from it
 mysql = MySQL(server)
@@ -23,26 +21,39 @@ mysql = MySQL(server)
 
 @server.route("/login", methods=["POST"])
 def login():
-    auth = request.authorization
-    if not auth:
-        return "missing credentials", 401
+    try:
+        auth = request.authorization
+        if not auth:
+            print("Missing credentials in request")
+            return "missing credentials", 401
 
-    # check db for user and password
-    cur = mysql.connection.cursor()
-    res = cur.execute("SELECT email,password FROM user WHERE email = %s", (auth.username))
-    if res > 0:
-        user_row = cur.fetchone()
-        email = user_row[0]
-        password = user_row[1]
+        print(f"Login attempt: {auth.username}")
 
-        if auth.username != email or auth.password != password:
-            return "invalid credentials", 401
+        # check db for user and password
+        cur = mysql.connection.cursor()
+        res = cur.execute("SELECT email,password FROM user WHERE email = %s", (auth.username,))
+        if res > 0:
+            user_row = cur.fetchone()
+            email = user_row[0]
+            password = user_row[1]
+
+            print(f"User found: {email}")
+
+            if auth.username != email or auth.password != password:
+                print("Invalid credentials")
+                return "invalid credentials", 401
+            else:
+                print("Credentials valid, generating JWT")
+                return createJWT(auth.username, os.environ.get("JWT_SECRET"), True)
+
         else:
-            return createJWT(auth.username, os.getenv("JWT_SECRET"), True )
+            print("User not found")
+            return "invalid credentials", 401
 
-    else:
-        return "invalid credentials", 401
-    
+    except Exception as e:
+        print(f"Login route error: {e}")
+        return "internal server error", 500
+
 
 
 @server.route("/validate", methods=["POST"])
@@ -54,7 +65,7 @@ def validate():
     encoded_jwt = encoded_jwt.split(" ")[1]
 
     try:
-        decoded = jwt.decode(encoded_jwt, os.getenv("JWT_SECRET"), algorithms=["HS256"])
+        decoded = jwt.decode(encoded_jwt, os.environ.get("JWT_SECRET"), algorithms=["HS256"])
 
     except:
         return "not authorized", 403

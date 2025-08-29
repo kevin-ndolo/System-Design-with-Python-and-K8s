@@ -4,6 +4,8 @@ import os, requests
 # Load environment variables from .env file
 load_dotenv()
 
+
+
 def login(request):
     # Extract Basic Auth credentials from incoming request
     auth = request.authorization

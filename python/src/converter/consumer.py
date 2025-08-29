@@ -3,14 +3,12 @@
 # converts them to MP3 using the convert module, and stores the result back into GridFS.
 
 
-from dotenv import load_dotenv
 import pika, sys, os, time
 from pymongo import MongoClient
 import gridfs
 from convert import to_mp3
 
-# Load environment variables early to ensure all config values are available before runtime.
-load_dotenv()
+
 
 def main():
     # Connect to MongoDB running inside Minikube.
@@ -56,7 +54,7 @@ def main():
     # Start consuming messages from the queue defined in the environment variable `VIDEO_QUEUE`.
     # `on_message_callback` binds the callback function to incoming messages.
     channel.basic_consume(
-        queue=os.getenv("VIDEO_QUEUE"), on_message_callback=callback
+        queue=os.environ.get("VIDEO_QUEUE"), on_message_callback=callback
     )
 
     # Log readiness to the console.
@@ -78,7 +76,7 @@ if __name__ == "__main__":
         import traceback
 
         # Log a clear error message to the console
-        print("❌ Converter startup failed:", e)
+        print(" Converter startup failed:", e)
 
         # Print the full stack trace for debugging
         traceback.print_exc()
