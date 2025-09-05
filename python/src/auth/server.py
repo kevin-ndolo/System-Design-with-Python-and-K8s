@@ -1,3 +1,4 @@
+import traceback
 import jwt, datetime, os
 from flask import Flask, request
 from flask_mysqldb import MySQL
@@ -52,6 +53,7 @@ def login():
 
     except Exception as e:
         print(f"Login route error: {e}")
+        traceback.print_exc()
         return "internal server error", 500
 
 
