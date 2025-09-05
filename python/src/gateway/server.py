@@ -45,22 +45,27 @@ def upload():
     access, err = validate.token(request)
 
     if err:
+        print(f"Token validation failed: {err}")
         return err
 
     access = json.loads(access)
+    print(f"Decoded token: {access}")
 
     if access["admin"]:
         if len(request.files) > 1 or len(request.files) < 1:
+            print("Incorrect number of files")
             return "exactly 1 file required", 400
 
         for _, f in request.files.items():
             err = util.upload(f, fs_videos, channel, access)
 
             if err:
+                print(f"Upload error: {err}")
                 return err
 
         return "success!", 200
     else:
+        print("User not authorized")
         return "not authorized", 401
 
 

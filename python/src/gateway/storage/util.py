@@ -1,11 +1,15 @@
+import traceback
 import pika, json
 
 def upload(f, fs_videos, channel, access):
     # Attempt to store the uploaded file in GridFS
     try:
+        print(f"Storing file: {f.filename}")
         fid = fs_videos.put(f)  # Store file and get its unique ID
+        print(f"Stored with ID: {fid}")
     except Exception as err:
-        print(err)  # Log error for debugging
+        print(f"GridFS error: {err}")  # Log error for debugging
+        traceback.print_exc()                # Print stack trace for debugging
         return "internal server error", 500  # Return generic error response
 
     # Construct message payload for RabbitMQ
@@ -17,6 +21,7 @@ def upload(f, fs_videos, channel, access):
 
     # Attempt to publish message to RabbitMQ queue
     try:
+        print(f"Publishing to RabbitMQ: {message}")
         channel.basic_publish(
             exchange="",               # Default exchange (direct routing)
             routing_key="video",       # Queue name for video processing
@@ -26,6 +31,7 @@ def upload(f, fs_videos, channel, access):
             ), 
         )
     except Exception as err:
-        print(err)      # Log error
+        print(f"RabbitMQ error: {err}")      # Log error
+        traceback.print_exc()                # Print stack trace for debugging
         fs_videos.delete(fid)  # Roll back file upload if publish fails
         return "internal server error", 500  # Return error response
