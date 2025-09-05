@@ -15,11 +15,17 @@ def login(request):
     # Format credentials for HTTP Basic Auth
     basicAuth = (auth.username, auth.password)
 
-    # Forward login request to the auth service
-    # AUTH_SVC_ADDRESS is expected to be set in .env (e.g., 'auth:5000')
-    response = requests.post(
-        f"http://{os.getenv('AUTH_SVC_ADDRESS')}/login", auth=basicAuth
-    )
+    try:
+        # Forward login request to the auth service
+        # AUTH_SVC_ADDRESS is expected to be set in .env (e.g., 'auth:5000')
+        response = requests.post(
+            f"http://{os.environ.get('AUTH_SVC_ADDRESS')}/login", auth=basicAuth
+        )
+
+    except Exception as e:
+        print(f"Gateway login error: {e}")
+        return None, ("auth service unreachable", 500)
+
 
     # If login is successful, return token (or response body)
     if response.status_code == 200:

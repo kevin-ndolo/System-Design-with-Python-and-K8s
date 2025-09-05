@@ -16,12 +16,19 @@ def token(request):
     if not token:
         return None, ("missing credentials", 401)
 
-    # Forward token to auth service for validation
-    # AUTH_SVC_ADDRESS should point to the auth service (e.g., 'auth:5000')
-    response = requests.post(
-        f"http://{os.getenv('AUTH_SVC_ADDRESS')}/validate",
-        headers={"Authorization": token},
-    )
+
+    try:
+        # Forward token to auth service for validation
+        # AUTH_SVC_ADDRESS should point to the auth service (e.g., 'auth:5000')
+        response = requests.post(
+            f"http://{os.environ.get('AUTH_SVC_ADDRESS')}/validate",
+            headers={"Authorization": token},
+        )
+
+    except Exception as e:
+        print(f"Gateway token validation error: {e}")
+        return None, ("auth service unreachable", 500)
+
 
     # If token is valid, return decoded user info (or response body)
     if response.status_code == 200:
