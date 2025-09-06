@@ -10,13 +10,18 @@ from bson.objectid import ObjectId  # Used to query MongoDB by document ID
 # Initialize Flask app
 server = Flask(__name__)
 
+mongo_uri = os.environ.get("MONGO_URI", "")
 # Connect to MongoDB for video storage
 # 'videos' DB stores raw video files via GridFS
-mongo_video = PyMongo(server, uri="mongodb://host.minikube.internal:27017/videos")
+# mongo_video = PyMongo(server, uri="mongodb://host.minikube.internal:27017/videos")
+
+
+mongo_video = PyMongo(server, uri=mongo_uri + "/videos")
 
 # Connect to MongoDB for mp3 storage
 # 'mp3s' DB stores converted audio files via GridFS
-mongo_mp3 = PyMongo(server, uri="mongodb://host.minikube.internal:27017/mp3s")
+# mongo_mp3 = PyMongo(server, uri="mongodb://host.minikube.internal:27017/mp3s")
+mongo_mp3 = PyMongo(server, uri=mongo_uri + "/mp3s")
 
 # Initialize GridFS for each database
 # GridFS allows storing large binary files in MongoDB
