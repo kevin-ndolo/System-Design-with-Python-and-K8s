@@ -1,0 +1,10 @@
+# ConfigMap for the Notification service
+# Stores non-sensitive environment variables used by the notification container
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: notification-configmap  # Unique name for referencing in Deployment
+data:
+  MP3_QUEUE: "mp3"              # Queue name for receiving MP3 conversion completion messages
+  VIDEO_QUEUE: "video"          # (Optional) Queue name for video-related coordination or fallback

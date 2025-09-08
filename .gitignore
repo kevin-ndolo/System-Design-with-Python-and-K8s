@@ -3,6 +3,7 @@ python/src/auth/env
 python/src/auth/init-final.sql
 python/src/auth/manifests/secret.yaml
 python/src/gateway/manifests/secret.yaml
+python/src/notification/manifests/secret.yaml
 **/secret.yaml
 
 

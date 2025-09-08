@@ -1,0 +1,32 @@
+# Kubernetes Deployment for the Notification service
+# This service listens to RabbitMQ for MP3 conversion events and triggers email notifications
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification              # Unique name for the Deployment
+  labels:
+    app: notification             # Label used for selection and grouping
+spec:
+  replicas: 4                     # Number of pod replicas to maintain
+  selector:
+    matchLabels:
+      app: notification           # Match pods with this label
+  strategy:
+    type: RollingUpdate           # Update pods incrementally to avoid downtime
+    rollingUpdate:
+      maxSurge: 8                 # Allow up to 8 extra pods during update (burst capacity)
+
+  template:
+    metadata:
+      labels:
+        app: notification         # Label applied to pod template (must match selector)
+    spec:
+      containers:
+        - name: notification      # Container name (used in logs and metrics)
+          image: kevindev1/notification:latest  # Docker image for the notification service
+          envFrom:
+            - configMapRef:
+                name: notification-configmap    # Inject non-sensitive env vars from ConfigMap
+            - secretRef:
+                name: notification-secret       # Inject sensitive env vars from Secret
